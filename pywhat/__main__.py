@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 """
-pyWhat: Identify Anything.
+pywhat: Identify Anything.
 """
 
 import platform
