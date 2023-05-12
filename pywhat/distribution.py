@@ -16,9 +16,9 @@ class Distribution:
 
     def __init__(self, filters_dict: Optional[dict] = None):
         tags = CaseInsensitiveSet(AvailableTags().get_tags())
-        self._dict = dict()
+        self._dict = {}
         if filters_dict is None:
-            filters_dict = dict()
+            filters_dict = {}
 
         self._dict["Tags"] = CaseInsensitiveSet(filters_dict.setdefault("Tags", tags))
         self._dict["ExcludeTags"] = CaseInsensitiveSet(
@@ -36,17 +36,17 @@ class Distribution:
         self._filter()
 
     def _filter(self):
-        temp_regexes = []
         min_rarity = self._dict["MinRarity"]
         max_rarity = self._dict["MaxRarity"]
-        for regex in self._regexes:
+        temp_regexes = [
+            regex
+            for regex in self._regexes
             if (
                 min_rarity <= regex["Rarity"] <= max_rarity
                 and set(regex["Tags"]) & self._dict["Tags"]
                 and not set(regex["Tags"]) & self._dict["ExcludeTags"]
-            ):
-                temp_regexes.append(regex)
-
+            )
+        ]
         self._regexes = temp_regexes
 
     def get_regexes(self):
@@ -91,11 +91,7 @@ class Distribution:
         )
 
     def __iand__(self, other):
-        if type(self) != type(other):
-            return NotImplemented
-        return self & other
+        return NotImplemented if type(self) != type(other) else self & other
 
     def __ior__(self, other):
-        if type(self) != type(other):
-            return NotImplemented
-        return self | other
+        return NotImplemented if type(self) != type(other) else self | other

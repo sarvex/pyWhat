@@ -26,7 +26,7 @@ class FileSignatures:
             to_check = i["Hexadecimal File Signature"]
             # Say we have "16 23 21", the [0, len()] prevents it from executing
             # as magic numbers only count at the start of the file.
-            if to_check == text[0 : len(to_check)]:
+            if to_check == text[: len(to_check)]:
                 # A file can only be one type
                 return i
         return None

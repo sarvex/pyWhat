@@ -18,13 +18,11 @@ class RegexIdentifier:
 
         for string in text:
             for reg in distribution.get_regexes():
-                matched_regex = re.search(reg["Regex"], string, re.UNICODE)
-
-                if matched_regex:
+                if matched_regex := re.search(reg["Regex"], string, re.UNICODE):
                     reg = copy.copy(reg)  # necessary, when checking phone
                     # numbers from file that may contain
                     # non-international numbers
-                    matched = self.clean_text(matched_regex.group(0))
+                    matched = self.clean_text(matched_regex[0])
 
                     if "Phone Number" in reg["Name"]:
                         number = re.sub(r"[-() ]", "", matched)
@@ -35,11 +33,11 @@ class RegexIdentifier:
                         with open(codes_fullpath, "r", encoding="utf-8") as myfile:
                             codes = json.load(myfile)
 
-                        locations = []
-                        for code in codes:
-                            if number.startswith(code["dial_code"]):
-                                locations.append(code["name"])
-                        if len(locations) > 0:
+                        if locations := [
+                            code["name"]
+                            for code in codes
+                            if number.startswith(code["dial_code"])
+                        ]:
                             reg["Description"] = (
                                 "Location(s)" + ": " + ", ".join(locations)
                             )

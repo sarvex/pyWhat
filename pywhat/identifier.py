@@ -17,10 +17,7 @@ class Identifier:
         key: Callable = Keys.NONE,
         reverse=False
     ):
-        if dist is None:
-            self.distribution = Distribution()
-        else:
-            self.distribution = dist
+        self.distribution = Distribution() if dist is None else dist
         self._regex_id = RegexIdentifier()
         self._file_sig = FileSignatures()
         self._name_that_hash = Nth()
@@ -47,9 +44,11 @@ class Identifier:
 
         if not only_text and os.path.isdir(text):
             # if input is a directory, recursively search for all of the files
-            for myfile in glob.iglob(text + "/**", recursive=True):
-                if os.path.isfile(myfile):
-                    search.append(os.path.abspath(myfile))
+            search.extend(
+                os.path.abspath(myfile)
+                for myfile in glob.iglob(f"{text}/**", recursive=True)
+                if os.path.isfile(myfile)
+            )
         else:
             search = [text]
 
@@ -79,7 +78,7 @@ class Identifier:
 
         for key_, value in identify_obj.items():
             # if there are zero regex or file signature matches, set it to None
-            if len(identify_obj[key_]) == 0:
+            if len(value) == 0:
                 identify_obj[key_] = None
 
         if key != Keys.NONE:

@@ -17,7 +17,7 @@ def print_tags(ctx, opts, value):
 
 
 def parse_options(rarity, include_tags, exclude_tags):
-    filter = dict()
+    filter = {}
     if rarity is not None:
         rarities = rarity.split(":")
         if len(rarities) != 2:

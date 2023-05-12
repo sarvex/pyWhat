@@ -35,22 +35,16 @@ to_iter = {"root": wt.tables[0].data()}
 to_iter = to_iter["root"]
 to_dump = []
 
-populars = set(["23 21"])
+populars = {"23 21"}
 
 for i in range(1, len(to_iter)):
-    to_insert = {}
-    to_insert["Hexadecimal File Signature"] = cleanhtml(to_iter[i][0]).replace(" ", "")
+    to_insert = {
+        "Hexadecimal File Signature": cleanhtml(to_iter[i][0]).replace(" ", "")
+    }
     check_iso = cleanhtml(to_iter[i][1])
-    if len(set(check_iso)) <= 2:
-        to_insert["ISO 8859-1"] = None
-    else:
-        to_insert["ISO 8859-1"] = check_iso
+    to_insert["ISO 8859-1"] = None if len(set(check_iso)) <= 2 else check_iso
     check = to_iter[i][3]
-    if check == "":
-        to_insert["Filename Extension"] = None
-    else:
-        to_insert["Filename Extension"] = cleanhtml(check)
-
+    to_insert["Filename Extension"] = None if check == "" else cleanhtml(check)
     des = to_iter[i][4]
     if "url" in des:
         splits = des.split("=")
